@@ -49,7 +49,16 @@ Homework1 extends DBTest {
          */
     void selectTheTrackAndAlbumAndArtistForAllTracksLongerThanSixMinutes() {
         List<Map<String, Object>> results = executeSQL(
-                "SELECT tracks.Name as TrackName, albums.Title as AlbumTitle, artists.Name as ArtistsName FROM tracks " +
+                "SELECT tracks.Name as TrackName,\n" +
+                        "       --albums.Title as AlbumTitle,\n" +
+                        "       --artists.Name as ArtistsName,\n" +
+                        "       tracks.Milliseconds\n" +
+                        "FROM tracks\n" +
+                        "--JOIN albums a on artists.ArtistId = a.ArtistId\n" +
+                        "--JOIN artists a2 on a2.ArtistId = a.ArtistId\n" +
+                        "--JOIN tracks t on a.AlbumId = t.AlbumId\n" +
+                        "--GROUP BY albums.Title, tracks.Name, artists.Name\n" +
+                        "WHERE tracks.Milliseconds > 1000 * 60 * 6;" +
                         "-- NEED TO DO SOME JOINS HERE KIDS");
 
         assertEquals(623, results.size());
