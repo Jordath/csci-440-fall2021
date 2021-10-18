@@ -172,6 +172,23 @@ public class Track extends Model {
     }
 
     @Override
+    public boolean create() {
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO tracks (Name) VALUES (?)"
+             )) {
+            //stmt.setLong(1, getArtistId());
+            stmt.setString(1, this.getName());
+            stmt.executeUpdate();
+            albumId = DB.getLastID(conn);
+            return true;
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    @Override
     public boolean update() {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(

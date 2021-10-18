@@ -70,7 +70,7 @@ public class Album extends Model {
              PreparedStatement stmt = conn.prepareStatement(
                      "INSERT INTO albums (name) VALUES (?)"
              )) {
-            stmt.setString(1,getTitle());
+            stmt.setString(1, this.getTitle());
             //stmt.setLong(2, getArtistId());
             ResultSet results = stmt.executeQuery();
             List<Album> resultList = new LinkedList<>();

@@ -54,10 +54,10 @@ public class Artist extends Model {
              PreparedStatement stmt = conn.prepareStatement(
                      "INSERT INTO artists (Name) VALUES (?)"
              )) {
-            //stmt.setLong(1, getArtistId());
-            stmt.setString(1, getName());
-
-            return stmt.execute();
+            stmt.setString(1, this.getName());
+            stmt.executeUpdate();
+            artistId = DB.getLastID(conn);
+            return true;
 
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
@@ -74,7 +74,7 @@ public class Artist extends Model {
             stmt.setString(1, getName());
             stmt.setLong(2, getArtistId());
 
-            return stmt.execute();
+            return true;
 
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
