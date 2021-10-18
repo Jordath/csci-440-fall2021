@@ -171,6 +171,23 @@ public class Track extends Model {
         return getAlbum().getTitle();
     }
 
+    @Override
+    public boolean update() {
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "UPDATE tracks SET Name = ? WHERE TrackId = ?"
+             )) {
+            //stmt.setLong(1, getArtistId());
+            stmt.setString(1, getName());
+            stmt.setLong(2, getTrackId());
+
+            return stmt.execute();
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
     public static List<Track> advancedSearch(int page, int count,
                                              String search, Integer artistId, Integer albumId,
                                              Integer maxRuntime, Integer minRuntime) {

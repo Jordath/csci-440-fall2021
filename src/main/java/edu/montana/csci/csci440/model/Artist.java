@@ -48,6 +48,39 @@ public class Artist extends Model {
         return all(0, Integer.MAX_VALUE);
     }
 
+    @Override
+    public boolean create() {
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO artists (Name) VALUES (?)"
+             )) {
+            //stmt.setLong(1, getArtistId());
+            stmt.setString(1, getName());
+
+            return stmt.execute();
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    @Override
+    public boolean update() {
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "UPDATE artists SET NAME = ? WHERE ArtistId = ?"
+             )) {
+            //stmt.setLong(1, getArtistId());
+            stmt.setString(1, getName());
+            stmt.setLong(2, getArtistId());
+
+            return stmt.execute();
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
     public static List<Artist> all(int page, int count) {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(

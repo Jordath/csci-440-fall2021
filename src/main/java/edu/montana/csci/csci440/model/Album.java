@@ -61,6 +61,51 @@ public class Album extends Model {
         return all(0, Integer.MAX_VALUE);
     }
 
+    @Override
+    public boolean create() {
+        //Long albumId;
+        //Long artistId;
+        //String title;
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO albums (name) VALUES (?)"
+             )) {
+            stmt.setString(1,getTitle());
+            //stmt.setLong(2, getArtistId());
+            ResultSet results = stmt.executeQuery();
+            List<Album> resultList = new LinkedList<>();
+            while (results.next()) {
+                resultList.add(new Album(results));
+            }
+            //return resultList;
+            return true;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    @Override
+    public boolean update() {
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "UPDATE albums SET Title = ? WHERE AlbumId = ?"
+             )) {
+            //stmt.setLong(1, getArtistId());
+            stmt.setString(1, getTitle());
+            stmt.setLong(2, getAlbumId());
+
+            return stmt.execute();
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    @Override
+    public boolean verify() {
+        return super.verify();
+    }
+
     public static List<Album> all(int page, int count) {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(
