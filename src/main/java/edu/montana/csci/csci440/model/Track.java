@@ -227,6 +227,19 @@ public class Track extends Model {
         }
     }
 
+    @Override
+    public boolean verify() {
+        // name and album
+        _errors.clear(); // clear any existing errors
+        if (name == null || "".equals(name)) {
+            addError("Name can't be null or blank!");
+        }
+        if (albumId == null || "".equals(albumId)) {
+            addError("LastName can't be null!");
+        }
+        return !hasErrors();
+    }
+
     public static List<Track> advancedSearch(int page, int count,
                                              String search, Integer artistId, Integer albumId,
                                              Integer maxRuntime, Integer minRuntime) {
