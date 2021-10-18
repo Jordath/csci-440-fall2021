@@ -73,12 +73,21 @@ public class Artist extends Model {
             //stmt.setLong(1, getArtistId());
             stmt.setString(1, getName());
             stmt.setLong(2, getArtistId());
-
+            stmt.executeUpdate();
             return true;
 
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
         }
+    }
+
+    @Override
+    public boolean verify() {
+        _errors.clear(); // clear any existing errors
+        if (name == null || "".equals(name)) {
+            addError("Name can't be null or blank!");
+        }
+        return !hasErrors();
     }
 
     public static List<Artist> all(int page, int count) {

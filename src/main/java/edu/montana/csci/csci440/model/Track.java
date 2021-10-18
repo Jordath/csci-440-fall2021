@@ -180,8 +180,21 @@ public class Track extends Model {
             //stmt.setLong(1, getArtistId());
             stmt.setString(1, this.getName());
             stmt.executeUpdate();
-            albumId = DB.getLastID(conn);
+            trackId = DB.getLastID(conn);
             return true;
+
+//            try (Connection conn = DB.connect();
+//                 PreparedStatement stmt = conn.prepareStatement(
+//                         "INSERT INTO artists (Name) VALUES (?)"
+//                 )) {
+//                stmt.setString(1, this.getName());
+//                stmt.executeUpdate();
+//                artistId = DB.getLastID(conn);
+//                return true;
+//
+//            } catch (SQLException sqlException) {
+//                throw new RuntimeException(sqlException);
+//            }
 
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
@@ -197,8 +210,17 @@ public class Track extends Model {
             //stmt.setLong(1, getArtistId());
             stmt.setString(1, getName());
             stmt.setLong(2, getTrackId());
+            stmt.executeUpdate();
+            return true;
 
-            return stmt.execute();
+//            PreparedStatement stmt = conn.prepareStatement(
+//                    "UPDATE albums SET Title = ? WHERE AlbumId = ?"
+//            )) {
+//                //stmt.setLong(1, getArtistId());
+//                stmt.setString(1, getTitle());
+//                stmt.setLong(2, getAlbumId());
+//                stmt.executeUpdate();
+//                return true;
 
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);

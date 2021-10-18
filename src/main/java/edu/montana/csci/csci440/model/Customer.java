@@ -79,6 +79,7 @@ public class Customer extends Model {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement("SELECT * FROM customers WHERE CustomerId=?")) {
             stmt.setLong(1, customerId);
+            //stmt.setString(2, );
             ResultSet results = stmt.executeQuery();
             if (results.next()) {
                 return new Customer(results);
