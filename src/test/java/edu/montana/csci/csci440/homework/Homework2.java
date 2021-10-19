@@ -16,7 +16,7 @@ public class Homework2 extends DBTest {
      */
     public void createTracksPlusView(){
         //TODO fill this in
-        executeDDL("CREATE VIEW tracksPlus");
+        executeDDL("CREATE VIEW tracksPlus AS SELECT ArtistName, SongTitle, AlbumTitle, Genre FROM tracks");
 
         List<Map<String, Object>> results = executeSQL("SELECT * FROM tracksPlus ORDER BY TrackId");
         assertEquals(3503, results.size());
@@ -62,7 +62,9 @@ public class Homework2 extends DBTest {
         Integer before = (Integer) executeSQL("SELECT COUNT(*) as COUNT FROM genres").get(0).get("COUNT");
 
         //TODO fill this in
-        executeUpdate("INSERT");
+        executeUpdate("INSERT INTO genres (Name) VALUES" +
+                "               (\"Black Metal\"), (\"Plainsong\"), (\"Tuvan Throat Singing\"), " +
+                "               (\"Cottagecore\"), (\"Yodeling Catcore\")");
 
         Integer after = (Integer) executeSQL("SELECT COUNT(*) as COUNT FROM genres").get(0).get("COUNT");
         assertEquals(before + 5, after);
