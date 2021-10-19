@@ -16,7 +16,8 @@ public class Homework2 extends DBTest {
      */
     public void createTracksPlusView(){
         //TODO fill this in
-        executeDDL("CREATE VIEW tracksPlus AS SELECT ArtistName, SongTitle, AlbumTitle, Genre FROM tracks");
+        executeDDL("CREATE VIEW tracksPlus AS SELECT artists.Name as ArtistName, tracks.name as SongTitle, " +
+                    "albums.title as AlbumTitle, genres.Name FROM tracks, artists, albums, genres");
 
         List<Map<String, Object>> results = executeSQL("SELECT * FROM tracksPlus ORDER BY TrackId");
         assertEquals(3503, results.size());
