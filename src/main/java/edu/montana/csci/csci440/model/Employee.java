@@ -72,9 +72,10 @@ public class Employee extends Model {
         if (verify()) {
             try (Connection conn = DB.connect();
                  PreparedStatement stmt = conn.prepareStatement(
-                         "INSERT INTO employees (FirstName, LastName, Email) VALUES (?, ?, ?)")) {
+                         "INSERT INTO employees (FirstName, LastName, Title, Email) VALUES (?, ?, ?, ?)")) {
                 stmt.setString(1, this.getFirstName());
                 stmt.setString(2, this.getLastName());
+                stmt.setString(3, this.title);
                 stmt.setString(3, this.getEmail());
                 stmt.executeUpdate();
                 employeeId = DB.getLastID(conn);
@@ -122,6 +123,7 @@ public class Employee extends Model {
         return employeeId;
     }
 
+
     public List<Customer> getCustomers() {
         return Customer.forEmployee(employeeId);
     }
@@ -152,7 +154,8 @@ public class Employee extends Model {
     }
     public Employee getBoss() {
         //TODO implement
-        return null;
+        return find(getReportsTo());
+        //return null;
     }
 
     public static List<Employee> all() {
@@ -202,6 +205,7 @@ public class Employee extends Model {
 
     public void setReportsTo(Employee employee) {
         // TODO implement
+        reportsTo = employee.employeeId;
     }
 
     public static class SalesSummary {
