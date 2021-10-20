@@ -28,9 +28,8 @@ public class Playlist extends Model {
         // TODO implement, order by track name
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(
-                     "SELECT playlists.PlaylistId, tracks.name FROM playlists\n" +
-                             "JOIN tracks on tracks.MediaTypeId = playlists.PlaylistId\n" +
-                             "WHERE PlaylistId = ? ORDER BY tracks.Name"
+                     "SELECT tracks.name FROM tracks\n" +
+                             "WHERE MediaTypeId = ? ORDER BY tracks.Name;"
              )) {
             stmt.setLong(1, getPlaylistId());
             ResultSet results = stmt.executeQuery();

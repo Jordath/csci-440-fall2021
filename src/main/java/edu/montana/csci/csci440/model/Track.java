@@ -218,6 +218,20 @@ public class Track extends Model {
     }
 
     @Override
+    public void delete() {
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "DELETE FROM tracks WHERE NAME = ?"
+             )) {
+            stmt.setString(1, getName());
+            stmt.executeUpdate();
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    @Override
     public boolean verify() {
         // name and album
         _errors.clear(); // clear any existing errors
