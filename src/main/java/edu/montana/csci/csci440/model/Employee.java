@@ -32,6 +32,7 @@ public class Employee extends Model {
 
     public static List<Employee.SalesSummary> getSalesSummaries() {
         //TODO - a GROUP BY query to determine the sales (look at the invoices table), using the SalesSummary class
+
         return Collections.emptyList();
     }
 
@@ -158,7 +159,6 @@ public class Employee extends Model {
     public Employee getBoss() {
         //TODO implement
         return find(getReportsTo());
-        //return null;
     }
 
     public static List<Employee> all() {

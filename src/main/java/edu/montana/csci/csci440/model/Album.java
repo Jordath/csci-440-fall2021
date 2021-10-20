@@ -63,18 +63,16 @@ public class Album extends Model {
 
     @Override
     public boolean create() {
-        //Long albumId;
-        //Long artistId;
-        //String title;
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO albums (AlbumId) VALUES (?)"
+                     "INSERT INTO albums (title, ArtistId) VALUES (?, ?)"
              )) {
             stmt.setString(1, this.getTitle());
+            stmt.setLong(2, this.getArtistId());
             stmt.executeUpdate();
             albumId = DB.getLastID(conn);
-
             return true;
+
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
         }

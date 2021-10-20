@@ -175,26 +175,16 @@ public class Track extends Model {
     public boolean create() {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO tracks (Name) VALUES (?)"
+                     "INSERT INTO tracks (Name, MediaTypeId, Milliseconds, UnitPrice) VALUES (?, ?, ?, ?)"
              )) {
-            //stmt.setLong(1, getArtistId());
+
             stmt.setString(1, this.getName());
+            stmt.setLong(2, this.getMediaTypeId());
+            stmt.setLong(3, getMilliseconds());
+            stmt.setBigDecimal(4, getUnitPrice());
             stmt.executeUpdate();
             trackId = DB.getLastID(conn);
             return true;
-
-//            try (Connection conn = DB.connect();
-//                 PreparedStatement stmt = conn.prepareStatement(
-//                         "INSERT INTO artists (Name) VALUES (?)"
-//                 )) {
-//                stmt.setString(1, this.getName());
-//                stmt.executeUpdate();
-//                artistId = DB.getLastID(conn);
-//                return true;
-//
-//            } catch (SQLException sqlException) {
-//                throw new RuntimeException(sqlException);
-//            }
 
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
@@ -322,7 +312,7 @@ public class Track extends Model {
     public static List<Track> all(int page, int count, String orderBy) {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(
-                     "SELECT * FROM tracks ORDER BY ? DESC LIMIT ? OFFSET ?"
+                     "SELECT * FROM tracks ORDER BY ? LIMIT ? OFFSET ?"
              )) {
             stmt.setString(1, orderBy);
             stmt.setInt(2, count);
