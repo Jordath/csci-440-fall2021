@@ -44,6 +44,9 @@ public class Employee extends Model {
         if (lastName == null || "".equals(lastName)) {
             addError("LastName can't be null!");
         }
+        if (email == null || !email.contains("@")) {
+            addError("Email can't be null or doesn't have an @!");
+        }
         return !hasErrors();
     }
 
