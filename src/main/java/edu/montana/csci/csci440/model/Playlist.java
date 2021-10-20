@@ -34,7 +34,16 @@ public class Playlist extends Model {
             stmt.setLong(1, getPlaylistId());
             ResultSet results = stmt.executeQuery();
             List<Track> resultList = new LinkedList<>();
+            long i = 1L;
+
             while (results.next()) {
+                //Track.find(i).setMediaTypeId(getPlaylistId());
+                Track tempTrack = Track.find(i);
+
+                assert tempTrack != null;
+                tempTrack.setMediaTypeId(getPlaylistId());
+                resultList.add(Track.find(i));
+                i++;
                 //resultList.add(new Track(results));
             }
             return resultList;
