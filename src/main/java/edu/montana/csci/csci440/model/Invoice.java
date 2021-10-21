@@ -34,7 +34,20 @@ public class Invoice extends Model {
     }
 
     public List<InvoiceItem> getInvoiceItems(){
-        //TODO implement
+//        //TODO implement
+//        String query = "SELECT * FROM customers WHERE SupportRepId=?";
+//        try (Connection conn = DB.connect();
+//             PreparedStatement stmt = conn.prepareStatement(query)) {
+//            stmt.setLong(1, employeeId);
+//            ResultSet results = stmt.executeQuery();
+//            List<InvoiceItem> resultList = new LinkedList<>();
+//            while (results.next()) {
+//                resultList.add(new InvoiceItem(results));
+//            }
+//            return resultList;
+//        } catch (SQLException sqlException) {
+//            throw new RuntimeException(sqlException);
+//        }
         return Collections.emptyList();
     }
     public Customer getCustomer() {

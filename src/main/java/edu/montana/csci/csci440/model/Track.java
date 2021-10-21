@@ -88,7 +88,8 @@ public class Track extends Model {
         return null;
     }
     public List<Playlist> getPlaylists(){
-        return Collections.emptyList();
+        return Playlist.forTracks(getName());
+        //return Collections.emptyList();
     }
 
     public Long getTrackId() {
@@ -203,15 +204,6 @@ public class Track extends Model {
             stmt.executeUpdate();
             return true;
 
-//            PreparedStatement stmt = conn.prepareStatement(
-//                    "UPDATE albums SET Title = ? WHERE AlbumId = ?"
-//            )) {
-//                //stmt.setLong(1, getArtistId());
-//                stmt.setString(1, getTitle());
-//                stmt.setLong(2, getAlbumId());
-//                stmt.executeUpdate();
-//                return true;
-
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
         }
@@ -303,6 +295,22 @@ public class Track extends Model {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setLong(1, albumId);
+            ResultSet results = stmt.executeQuery();
+            List<Track> resultList = new LinkedList<>();
+            while (results.next()) {
+                resultList.add(new Track(results));
+            }
+            return resultList;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    public static List<Track> forPlaylist(Long mediaTypeId) {
+        String query = "SELECT * FROM tracks WHERE MediaTypeId=? ORDER BY Name";
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setLong(1, mediaTypeId);
             ResultSet results = stmt.executeQuery();
             List<Track> resultList = new LinkedList<>();
             while (results.next()) {

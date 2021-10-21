@@ -23,34 +23,14 @@ public class Playlist extends Model {
         playlistId = results.getLong("PlaylistId");
     }
 
+    public static List<Playlist> forTracks(String name) {
+        return Collections.emptyList();
+    }
+
 
     public List<Track> getTracks(){
         // TODO implement, order by track name
-        try (Connection conn = DB.connect();
-             PreparedStatement stmt = conn.prepareStatement(
-                     "SELECT tracks.name FROM tracks\n" +
-                             "WHERE MediaTypeId = ? ORDER BY tracks.Name;"
-             )) {
-            stmt.setLong(1, getPlaylistId());
-            ResultSet results = stmt.executeQuery();
-            List<Track> resultList = new LinkedList<>();
-            long i = 1L;
-
-            while (results.next()) {
-                //Track.find(i).setMediaTypeId(getPlaylistId());
-                Track tempTrack = Track.find(i);
-
-                assert tempTrack != null;
-                tempTrack.setMediaTypeId(getPlaylistId());
-                resultList.add(Track.find(i));
-                i++;
-                //resultList.add(new Track(results));
-            }
-            return resultList;
-        } catch (SQLException sqlException) {
-            throw new RuntimeException(sqlException);
-        }
-        //return Collections.emptyList();
+        return Track.forPlaylist(getPlaylistId());
     }
 
     public Long getPlaylistId() {
