@@ -2,7 +2,10 @@ package edu.montana.csci.csci440.controller;
 
 import edu.montana.csci.csci440.model.Artist;
 import edu.montana.csci.csci440.model.Track;
+import edu.montana.csci.csci440.util.DB;
 import edu.montana.csci.csci440.util.Web;
+import org.javalite.activejdbc.cache.RedisCacheManager;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 
@@ -41,7 +44,16 @@ public class TracksController {
                 tracks = Track.all(Web.getPage(), Web.PAGE_SIZE, orderBy);
             }
             // TODO - implement cache of count w/ Redis
+            Jedis jedis = new Jedis();
+            String stringValue = jedis.get("csci-440-track-count-cache");
             long totalTracks = Track.count();
+            if(stringValue != null){
+                // do some stuff
+                jedis.set(stringValue, String.valueOf(totalTracks));
+            }
+            else {
+                totalTracks = Track.count();
+            }
             return Web.renderTemplate("templates/tracks/index.vm",
                     "tracks", tracks, "totalTracks", totalTracks);
         });
