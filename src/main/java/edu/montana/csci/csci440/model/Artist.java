@@ -13,14 +13,18 @@ import java.util.List;
 
 public class Artist extends Model {
 
+    private String originalName;
     Long artistId;
     String name;
+
 
     public Artist() {
     }
 
     private Artist(ResultSet results) throws SQLException {
+
         name = results.getString("Name");
+        originalName = name;
         artistId = results.getLong("ArtistId");
     }
 
@@ -64,17 +68,26 @@ public class Artist extends Model {
         }
     }
 
+
+
     @Override
     public boolean update() {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(
-                     "UPDATE artists SET NAME = ? WHERE ArtistId = ?"
+                     "UPDATE artists SET NAME = ? WHERE NAME = ? AND ArtistId = ?"
              )) {
+
             //stmt.setLong(1, getArtistId());
-            stmt.setString(1, getName());
-            stmt.setLong(2, getArtistId());
-            stmt.executeUpdate();
-            return true;
+            stmt.setString(1, this.getName());
+            stmt.setString(2, originalName);
+            stmt.setLong(3, this.getArtistId());
+            int updatedRows = stmt.executeUpdate();
+            if(updatedRows == 0) {
+                return false;
+            }
+            else{
+                return true;
+            }
 
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);

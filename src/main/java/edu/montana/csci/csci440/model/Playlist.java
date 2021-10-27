@@ -23,8 +23,25 @@ public class Playlist extends Model {
         playlistId = results.getLong("PlaylistId");
     }
 
-    public static List<Playlist> forTracks(String name) {
-        return Collections.emptyList();
+    public static List<Playlist> forTracks(long trackId) {
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT playlists.PlaylistId, playlists.Name FROM tracks\n" +
+                             "JOIN playlist_track on tracks.TrackId = playlist_track.TrackId\n" +
+                             "JOIN playlists on playlist_track.PlaylistId = playlists.PlaylistId\n" +
+                             "where tracks.TrackId = " + trackId
+             )) {
+
+            ResultSet results = stmt.executeQuery();
+            List<Playlist> resultList = new LinkedList<>();
+            while (results.next()) {
+                resultList.add(new Playlist(results));
+            }
+            return resultList;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+        //return Collections.emptyList();
     }
 
 

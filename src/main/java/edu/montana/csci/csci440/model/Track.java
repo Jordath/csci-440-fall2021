@@ -88,7 +88,7 @@ public class Track extends Model {
         return null;
     }
     public List<Playlist> getPlaylists(){
-        return Playlist.forTracks(getName());
+        return Playlist.forTracks(getTrackId());
         //return Collections.emptyList();
     }
 
