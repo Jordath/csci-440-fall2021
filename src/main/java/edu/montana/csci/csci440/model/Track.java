@@ -17,6 +17,8 @@ import java.util.List;
 
 public class Track extends Model {
 
+    private static String albumName;
+    private static String artistName;
     private Long trackId;
     private Long albumId;
     private Long mediaTypeId;
@@ -25,6 +27,7 @@ public class Track extends Model {
     private Long milliseconds;
     private Long bytes;
     private BigDecimal unitPrice;
+    //private String albumName;
 
     public static final String REDIS_CACHE_KEY = "cs440-tracks-count-cache";
 
@@ -34,6 +37,7 @@ public class Track extends Model {
         milliseconds  = 0l;
         bytes  = 0l;
         unitPrice = new BigDecimal("0");
+
     }
 
     private Track(ResultSet results) throws SQLException {
@@ -49,11 +53,17 @@ public class Track extends Model {
 
     public static Track find(long i) {
         try (Connection conn = DB.connect();
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM tracks WHERE TrackId=?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT *, artists.Name as artistName FROM tracks\n" +
+                     "JOIN albums on albums.AlbumId = tracks.AlbumId\n" +
+                     "JOIN artists on albums.ArtistId = artists.ArtistId\n" +
+                     "WHERE TrackId=?")) {
             stmt.setLong(1, i);
             ResultSet results = stmt.executeQuery();
             if (results.next()) {
+                albumName = results.getString("Title");
+                artistName = results.getString("artistName");
                 return new Track(results);
+
             } else {
                 return null;
             }
@@ -163,13 +173,15 @@ public class Track extends Model {
     public String getArtistName() {
         // TODO implement more efficiently
         //  hint: cache on this model object
-        return getAlbum().getArtist().getName();
+        return artistName;
+        //return getAlbum().getArtist().getName();
     }
 
     public String getAlbumTitle() {
         // TODO implement more efficiently
         //  hint: cache on this model object
-        return getAlbum().getTitle();
+        return albumName;
+        //return getAlbum().getTitle();
     }
 
     @Override
