@@ -33,17 +33,19 @@ public class Homework3 extends DBTest {
 
         try(Connection connection = DB.connect()){
             connection.setAutoCommit(false);
-            PreparedStatement subtract = connection.prepareStatement("TODO");
-            subtract.setLong(1, 0);
-            subtract.setLong(2, 0);
+            PreparedStatement subtract = connection.prepareStatement(
+            "UPDATE tracks SET Milliseconds=(Milliseconds - ?) WHERE TrackId = ?");
+            subtract.setLong(1, 10);
+            subtract.setLong(2, track1.getTrackId());
             subtract.execute();
 
-            PreparedStatement add = connection.prepareStatement("TODO");
-            subtract.setLong(1, 0);
-            subtract.setLong(2, 0);
-            subtract.execute();
+            PreparedStatement add = connection.prepareStatement("UPDATE tracks SET Milliseconds=(Milliseconds + ?) WHERE TrackId = ?");
+            add.setLong(1, 10);
+            add.setLong(2, track2.getTrackId());
+            add.execute();
 
             // commit with the connection
+            connection.commit();
         }
 
         // refresh tracks from db
