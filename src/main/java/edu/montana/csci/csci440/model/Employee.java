@@ -158,6 +158,22 @@ public class Employee extends Model {
         this.reportsTo = reportsTo;
     }
 
+    public static List<Employee> makeTreeHelper(){
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT * FROM employees"
+             )) {
+            ResultSet results = stmt.executeQuery();
+            List<Employee> resultList = new LinkedList<>();
+            while (results.next()) {
+                resultList.add(new Employee(results));
+            }
+            return resultList;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
     public List<Employee> getReports() {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(
