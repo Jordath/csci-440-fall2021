@@ -53,15 +53,15 @@ public class Track extends Model {
 
     public static Track find(long i) {
         try (Connection conn = DB.connect();
-             PreparedStatement stmt = conn.prepareStatement("SELECT *, artists.Name as artistName FROM tracks\n" +
+             PreparedStatement stmt = conn.prepareStatement("SELECT *, Title as Album, artists.Name as ArtistName FROM tracks\n" +
                      "JOIN albums on albums.AlbumId = tracks.AlbumId\n" +
                      "JOIN artists on albums.ArtistId = artists.ArtistId\n" +
                      "WHERE TrackId=?")) {
             stmt.setLong(1, i);
             ResultSet results = stmt.executeQuery();
             if (results.next()) {
-                albumName = results.getString("Title");
-                artistName = results.getString("artistName");
+                albumName = results.getString("Album");
+                artistName = results.getString("ArtistName");
                 return new Track(results);
 
             } else {

@@ -1,6 +1,7 @@
 package edu.montana.csci.csci440.model;
 
 import edu.montana.csci.csci440.util.DB;
+import redis.clients.jedis.Jedis;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +18,7 @@ public class Album extends Model {
     String title;
 
     public Album() {
+
     }
 
     private Album(ResultSet results) throws SQLException {
@@ -89,6 +91,22 @@ public class Album extends Model {
             stmt.setLong(2, getAlbumId());
             stmt.executeUpdate();
             return true;
+
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    @Override
+    public void delete() {
+        Jedis redisClient = new Jedis();
+        redisClient.flushAll();
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "DELETE FROM albums WHERE NAME = ?"
+             )) {
+            stmt.setString(1, getTitle());
+            stmt.executeUpdate();
 
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
