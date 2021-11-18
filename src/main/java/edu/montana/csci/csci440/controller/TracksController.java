@@ -47,13 +47,13 @@ public class TracksController {
             Jedis jedis = new Jedis();
             String stringValue = jedis.get("csci-440-track-count-cache");
             long totalTracks = Track.count();
-            if(stringValue != null){
-                // do some stuff
-                jedis.set(stringValue, String.valueOf(totalTracks));
-            }
-            else {
-                totalTracks = Track.count();
-            }
+//            if(stringValue != null){
+//                // do some stuff
+//                jedis.set(stringValue, String.valueOf(totalTracks));
+//            }
+//            else {
+//                totalTracks = Track.count();
+//            }
             return Web.renderTemplate("templates/tracks/index.vm",
                     "tracks", tracks, "totalTracks", totalTracks);
         });
