@@ -31,6 +31,8 @@ public class Album extends Model {
         return Artist.find(artistId);
     }
 
+    public void setArtistId(Long id) {this.artistId = id;}
+
     public void setArtist(Artist artist) {
         artistId = artist.getArtistId();
     }
@@ -103,7 +105,7 @@ public class Album extends Model {
         redisClient.flushAll();
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(
-                     "DELETE FROM albums WHERE NAME = ?"
+                     "DELETE FROM albums WHERE Title = ?"
              )) {
             stmt.setString(1, getTitle());
             stmt.executeUpdate();

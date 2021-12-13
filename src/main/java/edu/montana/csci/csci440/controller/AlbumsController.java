@@ -19,6 +19,7 @@ public class AlbumsController {
         post("/albums/new", (req, resp) -> {
             Album album = new Album();
             Web.putValuesInto(album, "Title");
+            Web.putValuesInto(album, "ArtistId");
             if (album.create()) {
                 Web.message("Created A Album!");
                 return Web.redirect("/albums/" + album.getAlbumId());
@@ -65,6 +66,7 @@ public class AlbumsController {
         /* DELETE */
         get("/albums/:id/delete", (req, resp) -> {
             Album album = Album.find(Integer.parseInt(req.params(":id")));
+            //Web.putValuesInto(album, "Title");
             album.delete();
             Web.message("Deleted Album " + album.getTitle());
             return Web.redirect("/albums");
